@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ticketpurchaseapp.purchase.repository.EventRegisterRepository">
+
+    <resultMap id="eventRegisterResultMap" type="com.ticketpurchaseapp.purchase.dto.Registration">
+        <id column="group_id" property="id"/>
+        <result column="event_id" property="eventId"/>
+        <result column="group_leader" property="groupLeaderId"/>
+        <result column="group_size" property="groupSize"/>
+    </resultMap>
+
+    <insert id="registerGroup" parameterType="com.ticketpurchaseapp.purchase.dto.Registration">
+        INSERT INTO registration_group_for_event (group_id, group_size, event_id, group_leader) 
+        VALUES (#{id}, #{groupSize}, #{eventId}, #{groupLeaderId})
+    </insert>
+
+    <insert id="registerUser" parameterType="map">
+        INSERT INTO confirmation_group_for_event (user_id, event_id, has_user_confirmed, group_id) 
+        VALUES (#{user.id}, #{event_id}, #{confirmation}, #{group_id})
+    </insert>
+
+    <select id="checkGroupStatus" parameterType="map" resultType="boolean">
+        SELECT has_all_users_confirmed 
+        FROM registration_group_for_event 
+        WHERE group_id=#{group_id} AND event_id=#{event_id}
+    </select>
+
+    <update id="updateUserStatus" parameterType="map" >
+        UPDATE confirmation_group_for_event
+        SET has_user_confirmed = 1
+        WHERE user_id = #{user_id} and group_id = #{group_id} and event_id = #{event_id}
+    </update>
+
+    <select id="checkUserStatus" parameterType="map" resultType="boolean">
+        SELECT has_user_confirmed
+        FROM confirmation_group_for_event
+        WHERE user_id = #{user_id} and group_id = #{group_id} and event_id = #{event_id}
+    </select>
+
+    <select id="getRegistrationGroupId" parameterType="map" resultType="String">
+        SELECT group_id
+        FROM confirmation_group_for_event
+        WHERE user_id=#{user_id} AND event_id=#{event_id}
+    </select>
+
+    <select id="getRegistrationGroupLeader" parameterType="map" resultType="String">
+        SELECT group_leader
+        FROM registration_group_for_event
+        WHERE group_id=#{group_id}
+    </select>
+    
+    <select id = "userGroupForEventCount" parameterType="map" resultType="int">
+        SELECT COUNT(*) 
+        FROM confirmation_group_for_event 
+        WHERE user_id = #{user_id} and event_id = #{event_id}
+    </select>
+
+    <select id="isGroupLeader" parameterType="map" resultType="boolean">
+        SELECT 
+        CASE 
+            WHEN COUNT(*) > 0 THEN TRUE
+            ELSE FALSE
+        END
+        FROM registration_group_for_event
+        WHERE group_id = #{group_id} AND group_leader = #{user_id}
+    </select>
+</mapper>

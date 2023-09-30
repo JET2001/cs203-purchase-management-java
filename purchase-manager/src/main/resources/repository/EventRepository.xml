@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ticketpurchaseapp.purchase.repository.EventRepository">
+
+    <resultMap id="eventResultMap" type="com.ticketpurchaseapp.purchase.dto.Event">
+        <id column="event_id" property="id"/>
+        <result column="event_name" property="name"/>
+        <result column="max_queueable" property="maxQueueable"/>
+        <result column="is_highlighted" property="isHighlighted"/>
+        <result column="description" property="description"/>
+        <result column="poster_image_path" property="posterImagePath"/>
+    </resultMap>
+
+    <resultMap id = "stringResultMap" type = "java.lang.String">
+        <result property="value" column = "country"/>
+    </resultMap>
+
+    <select id="retrieveAllEvents" resultMap="eventResultMap">
+        SELECT * FROM event
+    </select>
+
+    <select id="retrieveEvent" parameterType="map" resultMap="eventResultMap">
+        SELECT * FROM event
+        WHERE event_id = #{event_id}
+    </select>
+
+
+    <select id="retrieveAllCountriesForSpecificEvent" resultMap = "stringResultMap" parameterType="map">
+        SELECT country
+        FROM ticketmaster.event_countries 
+        WHERE event_id = #{event_id}
+    </select>
+
+    <select id = "retrieveHighlightedEventInfo" resultMap= "eventResultMap">
+        SELECT * 
+        FROM ticketmaster.event
+        WHERE is_highlighted = 1
+    </select>
+
+    <resultMap id="showResultMap" type="com.ticketpurchaseapp.purchase.dto.Show">
+        <id column="show_id" property="id"/>
+        <result column="show_datetime" property="dateTime"/>
+        <result column="location_id" property="locationId"/>
+        <result column="location_name" property="locationName"/>
+        <result column="venue_id" property="venueId"/>
+    </resultMap>
+
+    <resultMap id="queueResultMap" type="com.ticketpurchaseapp.purchase.dto.Queue">
+        <id column="queue_id" property="queueId"/>
+        <result column="show_id" property="showId"/>
+        <result column="event_id" property="eventId"/>
+        <result column="queue_start_datetime" property="startDateTime"/>
+        <result column="queue_end_datetime" property="endDatetime"/>
+    </resultMap>
+
+    <select id="retrieveAllShowsForSpecificEvent" parameterType="map" resultMap="showResultMap">
+        SELECT s.*, l.location_name as location_name
+        FROM `show` s
+        INNER JOIN location l ON s.location_id = l.location_id
+        WHERE s.event_id = #{event_id}
+    </select>
+
+    <select id="retrieveAllQueuesForSpecificEvent" parameterType="map" resultMap="queueResultMap">
+        SELECT * FROM queue
+        WHERE event_id = #{event_id}
+    </select>
+
+    <select id="retrieveAllQueuesForSpecificGroup" parameterType="map" resultMap="queueResultMap">
+        SELECT q.queue_id, q.queue_start_datetime, q.queue_end_datetime, q.show_id, q.event_id
+        FROM queue q 
+        INNER JOIN registration_group_for_queue r ON q.queue_id = r.queue_id
+        WHERE r.group_id =#{group_id}
+    </select>
+</mapper>

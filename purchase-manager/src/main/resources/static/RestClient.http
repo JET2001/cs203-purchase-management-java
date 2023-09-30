@@ -1,0 +1,72 @@
+POST http://localhost:8080/events-register/group
+Content-Type: application/json
+
+{
+
+  "userGroup": [
+    {
+      "email": "david.zhu.2022@smu.edu.sg", "mobile": "06586616057"
+    },
+    {
+      "email": "ryan.yap.2022@smu.edu.sg", "mobile": "06597873327"
+    }
+  ], 
+  "groupLeaderEmail": "david.zhu.2022@smu.edu.sg",
+  "eventId": "pink-sc-2024"
+
+}
+
+###
+
+GET http://localhost:8080/events-register/pink-sc-2024/reg-statuses/ff3d7270-f13f-41d3-9c2a-3819e7cba2cf
+Content-Type: application/json
+
+###
+
+GET http://localhost:8080/events/
+Content-Type: application/json
+
+###
+
+GET http://localhost:8080/events/pink-sc-2024
+Content-Type: application/json
+
+###
+PUT http://localhost:8080/events-register/group/event/user/confirm
+Content-Type: application/json
+
+{
+  "userId": "2",
+  "eventId": "pink-sc-2024",
+  "groupId": "ff3d7270-f13f-41d3-9c2a-3819e7cba2cf"
+}
+
+###
+POST http://localhost:8080/events-register/group/event/add-member
+Content-Type: application/json
+
+{
+  "eventId": "pink-sc-2024",
+  "userId": "1",
+  "groupId": "ff3d7270-f13f-41d3-9c2a-3819e7cba2cf",
+  "userGroup": [
+    {
+      "email": "jrteo.2022@smu.edu.sg", "mobile": "06598231539"
+    },
+    {
+      "email": "clarissatoh.2022@smu.edu.sg", "mobile": "06581996653"
+    }
+  ]
+}
+
+###
+GET http://localhost:8080/events/twice-rtb-2023/shows
+Content-Type: application/json
+
+###
+GET http://localhost:8080/events-register/pink-sc-2024/user/1/group-info
+Content-Type: application/json
+
+###
+GET http://localhost:8080/events-register/anson-2023/user/2/group-info
+Content-Type: application/json

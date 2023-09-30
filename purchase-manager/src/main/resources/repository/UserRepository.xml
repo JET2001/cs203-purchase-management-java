@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ticketpurchaseapp.purchase.repository.UserRepository">
+
+    <resultMap id="userResultMap" type="com.ticketpurchaseapp.purchase.dto.User">
+        <id column="user_id" property="id"/>
+        <result column="mobile_number" property="mobile"/>
+        <result column="email" property="email"/>
+        <result column="password" property="password"/>
+        <result column="authenticator_id" property="authenticatorId"/>
+        <result column="is_verified" property="verified" />
+    </resultMap>
+
+    <select id="findUserByEmailAndMobile" resultMap="userResultMap" parameterType="map">
+        SELECT user_id, mobile_number, email, authenticator_id, is_verified FROM user WHERE email = #{email} and mobile_number = #{mobile}
+    </select>
+
+    <select id="findUserByEmail" resultMap="userResultMap" parameterType="map">
+        SELECT user_id, mobile_number, email, authenticator_id, is_verified FROM user WHERE email = #{email} and is_verified = 1
+    </select>
+
+    <select id="retrieveUserForAuth" resultType = "java.lang.String" parameterType="map">
+        SELECT password FROM user
+        WHERE email = #{email} and mobile_number = #{mobile}
+    </select>
+
+    <resultMap id="userInfoResultMap" type="com.ticketpurchaseapp.purchase.dto.UserInfo">
+        <id column="user_id" property="id"/>
+        <result column="mobile_number" property="mobile"/>
+        <result column="email" property="email"/>
+        <result column="has_user_confirmed" property="isConfirmed"/>
+        <result column="is_group_leader" property="isGroupLeader"/>
+    </resultMap>
+    
+    <select id="getAllUserInfo" parameterType="map" resultMap="userInfoResultMap">
+        SELECT u.user_id, u.mobile_number, u.email, c.has_user_confirmed, 
+        (u.user_id = (SELECT group_leader FROM registration_group_for_event WHERE group_id = #{group_id}))
+        AS is_group_leader
+        FROM confirmation_group_for_event c 
+        INNER JOIN user u 
+        ON u.user_id = c.user_id
+        WHERE c.group_id=#{group_id}
+    </select>
+</mapper>
