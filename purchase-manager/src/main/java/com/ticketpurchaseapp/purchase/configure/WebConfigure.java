@@ -21,7 +21,8 @@ public class WebConfigure implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtInterceptor)
-                .addPathPatterns("/users/**");
-                // .addPathPatterns("/events-register/**");
+                .addPathPatterns("/users/**")
+                .addPathPatterns("/events-register/**")
+                .addPathPatterns("/purchase/seat-category-selection");
     }
 }
