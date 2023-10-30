@@ -33,3 +33,19 @@ Content-Type: application/json
   "userId": "1",
   "categoryId": 1
 }
+
+###
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+email: ryanyapjw@gmail.com,
+mobile: 97873327,
+password: password
+ipAddress: 1
+
+###
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+email: davidapsc@gmail.com
+mobile: 06592396157
+password: test123
+ipAddress: 1

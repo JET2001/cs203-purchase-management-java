@@ -3,6 +3,7 @@ package com.ticketpurchaseapp.purchase.service;
 import java.util.List;
 
 import com.ticketpurchaseapp.purchase.dto.User;
+import com.ticketpurchaseapp.purchase.dto.UserAuth;
 
 public interface UserService {
     public boolean isUserEmailVerified(String email);
