@@ -3,7 +3,7 @@ GET http://localhost:8080/purchase/tswift-era-2024/2024-03-02/categories
 Content-Type: application/json
 
 ###
-GET http://localhost:8080/purchase/tswift-era-2024/a/categories
+GET http://localhost:8080/purchase/cplay-mots-2024/2024-01-20/categories
 Content-Type: application/json
 
 ###
