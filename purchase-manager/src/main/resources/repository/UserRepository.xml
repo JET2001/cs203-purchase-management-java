@@ -39,12 +39,19 @@
     </select>
 
     <resultMap id="userAuthResultMap" type="com.ticketpurchaseapp.purchase.dto.UserAuth">
+        <result column="user_id" property = "userId"/>
         <result column="password" property="password"/>
         <result column="allow_login" property="allowLogin"/>
     </resultMap>
 
+    <resultMap id = "queueResultMap" type = "com.ticketpurchaseapp.purchase.dto.Queue">
+        <result column = "queue_id" property = "queueId" />
+        <result column = "queue_start_datetime" property = "startDateTime"/>
+        <result column = "queue_end_datetime" property = "endDateTime"/>
+    </resultMap>
+
     <select id="retrieveUserForAuth" resultMap="userAuthResultMap" parameterType="map">
-        SELECT password, allow_login FROM user
+        SELECT password, allow_login, user_id FROM user
         WHERE email = #{email} and mobile_number = #{mobile}
     </select>
 
@@ -65,4 +72,50 @@
     <delete id="removeExpiredLoginRecords" parameterType="map">
         DELETE FROM login_record WHERE #{datetime_recorded} > datetime_recorded
     </delete>
-</mapper>
+
+    <!-- hasGroupRegisteredQueues --> 
+
+    <select id="hasGroupRegisteredForThisQueue" parameterType = "map">
+        SELECT
+        CASE
+            WHEN COUNT(*) > 0 THEN TRUE
+            ELSE FALSE
+        END
+        FROM registration_group_for_queue
+        WHERE group_id = #{group_id} AND queue_id = #{queue_id} AND event_id = #{event_id}
+    </select>
+
+    <!-- isUserInGroup --> 
+
+    <select id="isUserInGroup" parameterType = "map">
+        SELECT
+        CASE
+            WHEN COUNT(*) > 0 THEN TRUE
+            ELSE FALSE
+        END
+        FROM confirmation_group_for_event 
+        WHERE user_id = #{user_id} AND group_id = #{group_id}
+    </select>    
+
+    <!-- isQueueStillOnGoing --> 
+
+    <select id="isQueueStillOnGoing" parameterType = "map">
+        SELECT 
+        CASE
+            WHEN COUNT(*) > 0 THEN TRUE
+            ELSE FALSE
+        END
+        FROM queue
+        WHERE queue_id = #{queue_id} AND
+        AND (SELECT queue_end_datetime FROM queue WHERE queue_id = #{queue_id} LIMIT 1) > DATE_ADD(NOW(), INTERVAL 8 HOUR)
+    </select>
+
+    <!-- getQueuesForUser --> 
+
+    <select id="getQueuesForUser">
+    SELECT queue_id, queue_start_datetime, queue_end_datetime 
+    FROM queue
+    WHERE queue_id = #{queue_id}
+    </select>   
+    
+     </mapper>
