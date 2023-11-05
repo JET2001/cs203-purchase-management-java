@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.ticketpurchaseapp.purchase.common.exception.InvalidArgsException;
+import com.ticketpurchaseapp.purchase.common.exception.UserException;
 import com.ticketpurchaseapp.purchase.dto.User;
 import com.ticketpurchaseapp.purchase.service.UserService;
 import com.ticketpurchaseapp.purchase.util.JwtUtil;
@@ -23,30 +24,38 @@ public class AuthController {
 
     private final UserService userService;
 
-    public AuthController(UserService userService){
+    public AuthController(UserService userService) {
         this.userService = userService;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateAndLoginUser(@RequestHeader("email") String email, @RequestHeader("mobile") String mobile, @RequestHeader("password") String password, @RequestHeader("ipAddress") String ipAddress) {
+    public ResponseEntity<?> authenticateAndLoginUser(@RequestHeader("email") String email,
+            @RequestHeader("mobile") String mobile, @RequestHeader("password") String password,
+            @RequestHeader("ipAddress") String ipAddress, @RequestHeader("groupId") String groupId,
+            @RequestHeader("eventId") String eventId, @RequestHeader("queueId") String queueId) {
         userService.removeExpiredLoginRecords();
         if (userService.isLoginLocked(ipAddress)) {
-            return ResponseEntity.ok().body(false);
+            return ResponseEntity.status(403).body("Too many login attempts. Please try again in 15 minutes.");
         }
         try {
-            if (userService.authenticateUser(email, mobile , password)) {
+            if (userService.authenticateUser(email, mobile, password, groupId, eventId, queueId)) {
                 String jwt = JwtUtil.generateToken(mobile);
                 return ResponseEntity.ok().body(jwt);
-            } 
+            }
+            userService.recordLoginFailed(ipAddress);
             return ResponseEntity.ok().body(false);
         } catch (InvalidArgsException e) {
             log.error("Verify multiple error: ", e);
             userService.recordLoginFailed(ipAddress);
             return ResponseEntity.unprocessableEntity().body(e.getMessage());
+            
+        } catch (UserException e){
+            log.error(e.getMessage());
+            return ResponseEntity.status(403).body(e.getMessage());
         } catch (Exception e) {
-            System.out.println(e.getStackTrace());
+            System.out.println(e.getStackTrace().toString());
             userService.recordLoginFailed(ipAddress);
             return ResponseEntity.internalServerError().body("Server Error: " + e.getMessage());
-        } 
+        }
     }
 }
