@@ -11,9 +11,11 @@ import org.springframework.stereotype.Service;
 
 import com.ticketpurchaseapp.purchase.common.exception.InvalidArgsException;
 import com.ticketpurchaseapp.purchase.common.exception.UserException;
+import com.ticketpurchaseapp.purchase.dto.Queue;
 import com.ticketpurchaseapp.purchase.dto.User;
 import com.ticketpurchaseapp.purchase.dto.UserAuth;
 import com.ticketpurchaseapp.purchase.repository.UserRepository;
+import com.ticketpurchaseapp.purchase.service.EventRegisterService;
 import com.ticketpurchaseapp.purchase.service.UserService;
 import com.ticketpurchaseapp.purchase.util.Utility;
 
@@ -33,7 +35,7 @@ public class UserServiceImpl implements UserService {
         if (!utility.emailWhitelist(email) || !utility.isInputSafe(mobile)) {
             throw new InvalidArgsException("Invalid email and/or mobile");
         }
-        
+
         User user = userRepository.findUserByEmailAndMobile(email, mobile);
         if (user == null)
             throw new UserException("user does not exist");
@@ -59,9 +61,9 @@ public class UserServiceImpl implements UserService {
             throw new InvalidArgsException("Invalid email and/or mobile");
         }
         try {
-           User user = getUser(email, mobile);
-           return (user != null) && user.isVerified(); 
-        } catch(UserException e){
+            User user = getUser(email, mobile);
+            return (user != null) && user.isVerified();
+        } catch (UserException e) {
             return false;
         }
     }
@@ -77,18 +79,42 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean authenticateUser(String email, String mobile, String password) {
+    public boolean authenticateUser(String email, String mobile, String password, String groupId, String eventId,
+            String queueId) {
         Utility utility = new Utility();
         if (!utility.emailWhitelist(email) || !utility.isInputSafe(mobile) || password == null) {
             throw new InvalidArgsException("invalid login credentials - failed preliminary check");
         }
 
         UserAuth userAuth = userRepository.retrieveUserForAuth(email, mobile);
-        if (userAuth.isAllowLogin()) {
-            return utility.checkPassword(password, userAuth.getPassword());
+
+        if (utility.checkPassword(password, userAuth.getPassword())) {
+            throw new UserException("Email or password is incorrect");
         }
-        throw new UserException("Email is not verified");
+        if (!userAuth.isAllowLogin()) {
+            throw new UserException("Email is not verified");
+        }
+
+        // Check if user is indeed part of this group
+        if (!userRepository.isUserInGroup(userAuth.getUserId(), groupId)) {
+            throw new UserException("Invalid user");
+        }
+
+        // Check if user's group has registered for this queue.
+        if (!userRepository.hasGroupRegisteredForThisQueue(groupId, queueId)) {
+            throw new UserException("Invalid user group for event");
+        }
+
+        // Check if the queue has already closed
+        if (!userRepository.isQueueStillOnGoing(queueId)){
+            throw new UserException("The queue you have registered for has closed");
+        }
+
+        // Check if there is already one member logged in
         
+
+        // If all these checks pass, then the user can login
+        return true;
     }
 
     @Override
