@@ -28,19 +28,25 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateAndLoginUser(@RequestHeader("email") String email, @RequestHeader("mobile") String mobile, @RequestHeader("password") String password) {
+    public ResponseEntity<?> authenticateAndLoginUser(@RequestHeader("email") String email, @RequestHeader("mobile") String mobile, @RequestHeader("password") String password, @RequestHeader("ipAddress") String ipAddress) {
+        userService.removeExpiredLoginRecords();
+        if (userService.isLoginLocked(ipAddress)) {
+            return ResponseEntity.ok().body(false);
+        }
         try {
             if (userService.authenticateUser(email, mobile , password)) {
                 String jwt = JwtUtil.generateToken(mobile);
                 return ResponseEntity.ok().body(jwt);
-            }
+            } 
             return ResponseEntity.ok().body(false);
         } catch (InvalidArgsException e) {
             log.error("Verify multiple error: ", e);
+            userService.recordLoginFailed(ipAddress);
             return ResponseEntity.unprocessableEntity().body(e.getMessage());
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
+            userService.recordLoginFailed(ipAddress);
             return ResponseEntity.internalServerError().body("Server Error: " + e.getMessage());
-        }
+        } 
     }
 }
