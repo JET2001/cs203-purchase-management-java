@@ -38,12 +38,13 @@ public class AuthController {
             return ResponseEntity.status(403).body("Too many login attempts. Please try again in 15 minutes.");
         }
         try {
-            if (userService.authenticateUser(email, mobile, password, groupId, eventId, queueId)) {
+            if (userService.authenticateUser(email, mobile, password, ipAddress, groupId, eventId, queueId)) {
                 String jwt = JwtUtil.generateToken(mobile);
                 return ResponseEntity.ok().body(jwt);
             }
             userService.recordLoginFailed(ipAddress);
-            return ResponseEntity.ok().body(false);
+
+            return ResponseEntity.internalServerError().body("Internal server error at login: Please contact us regarding this issue.");
         } catch (InvalidArgsException e) {
             log.error("Verify multiple error: ", e);
             userService.recordLoginFailed(ipAddress);
@@ -51,6 +52,7 @@ public class AuthController {
             
         } catch (UserException e){
             log.error(e.getMessage());
+            userService.recordLoginFailed(ipAddress);
             return ResponseEntity.status(403).body(e.getMessage());
         } catch (Exception e) {
             System.out.println(e.getStackTrace().toString());
