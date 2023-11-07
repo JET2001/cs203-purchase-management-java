@@ -14,7 +14,7 @@ public interface UserService {
 
     public User getUser(String email);
     
-    public boolean authenticateUser(String email, String mobile, String password);
+    public boolean authenticateUser(String email, String mobile, String password, String ipAddress, String groupId, String eventId, String queueId);
 
     public int recordLoginFailed(String ipAddress);
 

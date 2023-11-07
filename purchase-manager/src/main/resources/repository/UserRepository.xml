@@ -39,17 +39,24 @@
     </select>
 
     <resultMap id="userAuthResultMap" type="com.ticketpurchaseapp.purchase.dto.UserAuth">
+        <result column="user_id" property = "userId"/>
         <result column="password" property="password"/>
         <result column="allow_login" property="allowLogin"/>
     </resultMap>
 
+    <resultMap id = "queueResultMap" type = "com.ticketpurchaseapp.purchase.dto.Queue">
+        <result column = "queue_id" property = "queueId" />
+        <result column = "queue_start_datetime" property = "startDateTime"/>
+        <result column = "queue_end_datetime" property = "endDateTime"/>
+    </resultMap>
+
     <select id="retrieveUserForAuth" resultMap="userAuthResultMap" parameterType="map">
-        SELECT password, allow_login FROM user
+        SELECT password, allow_login, user_id FROM user
         WHERE email = #{email} and mobile_number = #{mobile}
     </select>
 
     <insert id="recordLoginFailed" parameterType="map">
-        INSERT INTO login_record (ip_address, datetime_recorded) VALUES (#{ip_address}, #{datetime_recorded})
+        INSERT INTO login_record (ip_address, datetime_recorded, success) VALUES (#{ip_address}, #{datetime_recorded}, 0)
     </insert>
 
     <select id="isLoginLocked" parameterType="map" resultType="boolean">
@@ -63,6 +70,58 @@
     </select>
 
     <delete id="removeExpiredLoginRecords" parameterType="map">
-        DELETE FROM login_record WHERE #{datetime_recorded} > datetime_recorded
+        DELETE FROM login_record WHERE #{datetime_recorded} > datetime_recorded AND success = 0
     </delete>
+
+    <!-- hasGroupRegisteredQueues --> 
+
+    <select id="hasGroupRegisteredForThisQueue" parameterType="map" resultType="boolean">
+        SELECT
+        CASE
+            WHEN COUNT(*) > 0 THEN TRUE
+            ELSE FALSE
+        END
+        FROM registration_group_for_queue
+        WHERE group_id = #{group_id} AND queue_id = #{queue_id} AND event_id = #{event_id}
+    </select>
+
+    <!-- isUserInGroup --> 
+
+    <select id="isUserInGroup" parameterType = "map" resultType = "boolean">
+        SELECT
+        CASE
+            WHEN COUNT(*) > 0 THEN TRUE
+            ELSE FALSE
+        END
+        FROM confirmation_group_for_event 
+        WHERE user_id = #{user_id} AND group_id = #{group_id}
+    </select>    
+
+    <!-- isQueueStillOnGoing --> 
+
+    <select id="isQueueStillOnGoing" parameterType = "map" resultType = "boolean">
+        SELECT 
+        CASE
+            WHEN COUNT(*) > 0 THEN TRUE
+            ELSE FALSE
+        END
+        FROM queue
+        WHERE queue_id = #{queue_id}
+        AND queue_end_datetime > DATE_ADD(NOW(), INTERVAL 8 HOUR)
+    </select>
+
+    <!-- recordLoginSuccess --> 
+
+    <select id="recordLoginSuccess" parameterType = "map">
+        INSERT INTO login_record (ip_address, datetime_recorded, group_id, user_id, success) VALUES (#{ip_address}, #{datetime_recorded}, #{group_id}, #{user_id}, 1)
+    </select>
+
+    <!-- isAnyGroupMemberSuccessful --> 
+
+    <select id="getQueueingGroupMember" parameterType = "map" resultType = "java.lang.String">
+        SELECT user_id
+        FROM login_record
+        WHERE group_id = #{group_id} 
+        AND success = 1
+    </select>  
 </mapper>
