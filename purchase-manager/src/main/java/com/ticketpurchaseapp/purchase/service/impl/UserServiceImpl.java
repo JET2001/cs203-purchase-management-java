@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService {
 
         UserAuth userAuth = userRepository.retrieveUserForAuth(email, mobile);
 
-        if (!utility.checkPassword(password, userAuth.getPassword())) {
+        if (userAuth == null || !utility.checkPassword(password, userAuth.getPassword())) {
             throw new UserException("Email or password is incorrect");
         }
         if (!userAuth.isAllowLogin()) {

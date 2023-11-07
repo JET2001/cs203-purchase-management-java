@@ -1,0 +1,705 @@
+{
+	"info": {
+		"_postman_id": "42f91ec7-5e10-4f2b-8d9a-e4b04aade728",
+		"name": "cs203-localhost8080",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29560067"
+	},
+	"item": [
+		{
+			"name": "Auth APIs",
+			"item": [
+				{
+					"name": "user login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "email",
+								"value": "jrteo.2022@smu.edu.sg",
+								"type": "text"
+							},
+							{
+								"key": "mobile",
+								"value": "06598231539",
+								"type": "text"
+							},
+							{
+								"key": "password",
+								"value": "test123",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://13.250.22.158:8080/auth/login",
+							"protocol": "http",
+							"host": [
+								"13",
+								"250",
+								"22",
+								"158"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user login Copy",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "email",
+								"value": "jrteo.2022@smu.edu.sg",
+								"type": "text"
+							},
+							{
+								"key": "mobile",
+								"value": "06598231539",
+								"type": "text"
+							},
+							{
+								"key": "password",
+								"value": "test123",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://18.139.67.183:8080/auth/login",
+							"protocol": "http",
+							"host": [
+								"18",
+								"139",
+								"67",
+								"183"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User APIs",
+			"item": [
+				{
+					"name": "register user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjU5ODIzMTUzOSIsImlhdCI6MTY5NzI5MDA0NSwiZXhwIjoxNjk3MjkzNjQ1fQ.5RMGnuNJaJp6JJDO0n9Rf-68rHRIulmLABbL1I12_7k",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"abc@gmail.com\",\r\n    \"mobile\": \"0000000009\",\r\n    \"password\":\"test123\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/users/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user by email and mobile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjU5ODIzMTUzOSIsImlhdCI6MTY5NzI5MDA0NSwiZXhwIjoxNjk3MjkzNjQ1fQ.5RMGnuNJaJp6JJDO0n9Rf-68rHRIulmLABbL1I12_7k",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/users?email=abc@123&mobile=06598231539",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "abc@123"
+								},
+								{
+									"key": "mobile",
+									"value": "06598231539"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "is-verified",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjU5ODIzMTUzOSIsImlhdCI6MTY5NzcyMzY3MSwiZXhwIjoxNjk3NzI3MjcxfQ.3hUauv2XcxltTHIFm7QM_SHI_s_gOG84Q4NgQp1KZIw",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://{{testURL}}:8080/users/is-verified?email=jrteo.2022@smu.edu.sg&mobile=06598231539",
+							"protocol": "http",
+							"host": [
+								"{{testURL}}"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"is-verified"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "jrteo.2022@smu.edu.sg"
+								},
+								{
+									"key": "mobile",
+									"value": "06598231539"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "- Register User API might have an error when testing locally, but the `RabbitTemplate` might be giving us problems right now.\n    \n    - Stack trace:\n        \n        - `Server Error: SimpleMessageConverter only supports String, byte[] and Serializable payloads, received: com.ticketmasterdemo.demo.dto.VerificationEmail`"
+		},
+		{
+			"name": "Events APIs",
+			"item": [
+				{
+					"name": "get-events",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "get-highlighted-events",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/events/highlighted",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"events",
+								"highlighted"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-specific-event",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Events-Register-APIs",
+			"item": [
+				{
+					"name": "post-register-group",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjU5ODIzMTUzOSIsImlhdCI6MTY5NzYzNDMzNywiZXhwIjoxNjk3NjM3OTM3fQ.pTQ-SRtotHXzbhnVeKzuk89CGfzOw9hqy8wMkdhaxKg",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userGroup\": [\r\n        {\r\n            \"email\": \"jrteo.2022@smu.edu.sg\",\r\n            \"mobile\": \"06598231539\"\r\n        },\r\n        {\r\n            \"email\": \"ryan.yap.2022@smu.edu.sg\",\r\n            \"mobile\": \"06597873327\"\r\n        }\r\n    ],\r\n    \"groupLeaderEmail\": \"jrteo.2022@smu.edu.sg\",\r\n    \"eventId\": \"enhypen-2023\"\r\n}"
+						},
+						"url": {
+							"raw": "http://{{testURL}}:8080/events-register/group",
+							"protocol": "http",
+							"host": [
+								"{{testURL}}"
+							],
+							"port": "8080",
+							"path": [
+								"events-register",
+								"group"
+							],
+							"query": [
+								{
+									"key": "groupId",
+									"value": "7fca5275-6e6c-4518-b7d4-4c1ccdda0fc0",
+									"disabled": true
+								},
+								{
+									"key": "eventId",
+									"value": "anson-2023",
+									"disabled": true
+								},
+								{
+									"key": "userId",
+									"value": "10",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Group Leader Modify Group",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjU5ODIzMTUzOSIsImlhdCI6MTY5NzMwOTcxOSwiZXhwIjoxNjk3MzEzMzE5fQ.cGi4w6ndk1O2FsC_ehILkiVubYaD3JxQ__SFx197P4I",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "// Testcase 1: Run this once. Output should be true.\r\n// has_all_users_confirmed = 0 and group_size = 3 in the reg_group_for_events_table\r\n// previous entries deleted from confirmation group for events\r\n// {\r\n//     \"userGroup\": [\r\n//         {\r\n//             \"email\": \"david.zhu.2022@smu.edu.sg\",\r\n//             \"mobile\": \"06586616057\"\r\n//         },\r\n//         {\r\n//             \"email\": \"ryan.yap.2022@smu.edu.sg\",\r\n//             \"mobile\": \"06597873327\"\r\n//         },\r\n//         {\r\n//             \"email\": \"kaifengwoo3@gmail.com\",\r\n//             \"mobile\": \"00000000004\"\r\n//         }\r\n//     ],\r\n//     \"groupLeaderEmail\" : \"david.zhu.2022@smu.edu.sg\",\r\n//     \"groupLeaderId\": \"1\",\r\n//     \"eventId\": \"pink-sc-2024\"\r\n// }\r\n\r\n// Testcase 2: Group changes to only the group leader.\r\n// Output should be: true\r\n// has_all_users_confirmed = 1 and group size = 1 in the reg_group_for_events_table\r\n// previous entries deleted from confirmation group for events\r\n{\r\n    \"userGroup\": [\r\n        {\r\n            \"email\": \"david.zhu.2022@smu.edu.sg\",\r\n            \"mobile\": \"06586616057\"\r\n        }\r\n    ],\r\n    \"groupLeaderEmail\" : \"david.zhu.2022@smu.edu.sg\",\r\n    \"groupLeaderId\": \"1\",\r\n    \"eventId\": \"pink-sc-2024\"\r\n}\r\n\r\n// Run testcase 1 again, settings should reset\r\n\r\n\r\n// Testcase 3: Not a group leader\r\n// Should fail & previous group is unchanged.\r\n// {\r\n//     \"userGroup\": [\r\n//         {\r\n//             \"email\": \"ryan.yap.2022@smu.edu.sg\",\r\n//             \"mobile\": \"06597873327\"\r\n//         },\r\n//     ],\r\n//     \"groupLeaderEmail\" : \"ryan.yap.2022@smu.edu.sg\",\r\n//     \"groupLeaderId\": \"2\",\r\n//     \"eventId\": \"pink-sc-2024\"\r\n// }\r\n\r\n\r\n// Testcase 4: Incorrect user email\r\n// Should fail\r\n// Previous Group is not modified.\r\n// {\r\n//     \"userGroup\": [\r\n//         {\r\n//             \"email\": \"david.zhu.2022@smu.edu.sg2\",\r\n//             \"mobile\": \"06586616057\"\r\n//         }\r\n//     ],\r\n//     \"groupLeaderEmail\" : \"david.zhu.2022@smu.edu.sg\",\r\n//     \"groupLeaderId\": \"1\",\r\n//     \"eventId\": \"pink-sc-2024\"\r\n// }\r\n"
+						},
+						"url": {
+							"raw": "http://localhost:8080/events-register/modify-group",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"events-register",
+								"modify-group"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Non-group-leader to leave group",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjU5ODIzMTUzOSIsImlhdCI6MTY5NzMxMjc3NywiZXhwIjoxNjk3MzE2Mzc3fQ.tAw9JHgrrhqhneX2653TJVTXuBZrhfVdqyoRsz_sQTo",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/events-register/group/leave-group?groupId=7fca5275-6e6c-4518-b7d4-4c1ccdda0fc0&eventId=anson-2023&userId=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"events-register",
+								"group",
+								"leave-group"
+							],
+							"query": [
+								{
+									"key": "groupId",
+									"value": "7fca5275-6e6c-4518-b7d4-4c1ccdda0fc0"
+								},
+								{
+									"key": "eventId",
+									"value": "anson-2023"
+								},
+								{
+									"key": "userId",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-user-reg-group-info",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Non-Group-Leader-Confirm",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Queue Register APIs",
+			"item": [
+				{
+					"name": "Register for Queues",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjU5ODIzMTUzOSIsImlhdCI6MTY5NzU1MDEzMywiZXhwIjoxNjk3NTUzNzMzfQ.LzoYuW-D0_Qt4N2hUVtvSQR7oGR5oT7jPc9BuDJT-As",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "// Case 1: Wrong userID\r\n// Status: 406 Not Acceptable\r\n// {\r\n//     \"groupId\": \"ff3d7270-f13f-41d3-9c2a-3819e7cba2cf\",\r\n//     \"userId\": \"2\",\r\n//     \"eventId\": \"pink-sc-2024\",\r\n//     \"queueIdList\": [\r\n//         \"4faa4933-54cf-11ee-99af-0a2a518633fa\",\r\n//         \"4faa49aa-54cf-11ee-99af-0a2a518633fa\",\r\n//         \"4faa4a81-54cf-11ee-99af-0a2a518633fa\"\r\n//     ],\r\n//     \"showIdList\":[\r\n//         \"2024-02-13\",\r\n//         \"2024-02-20\",\r\n//         \"2024-03-02\"\r\n//     ]\r\n// }\r\n\r\n// Case 2: Correct entry\r\n// Status: 200 OK\r\n// {\r\n//     \"groupId\": \"ff3d7270-f13f-41d3-9c2a-3819e7cba2cf\",\r\n//     \"userId\": \"1\",\r\n//     \"eventId\": \"pink-sc-2024\",\r\n//     \"queueIdList\": [\r\n//         \"4faa4933-54cf-11ee-99af-0a2a518633fa\",\r\n//         \"4faa49aa-54cf-11ee-99af-0a2a518633fa\",\r\n//         \"4faa4a81-54cf-11ee-99af-0a2a518633fa\"\r\n//     ],\r\n//     \"showIdList\":[\r\n//         \"2024-02-13\",\r\n//         \"2024-02-20\",\r\n//         \"2024-03-02\"\r\n//     ]\r\n// }\r\n\r\n\r\n// Case 3: Discrepancy in QueueID, showID pair\r\n// Status: 406 Not Acceptable\r\n// Body: Queue Register Error: One or more queueIds are invalid\r\n// {\r\n//     \"groupId\": \"ff3d7270-f13f-41d3-9c2a-3819e7cba2cf\",\r\n//     \"userId\": \"1\",\r\n//     \"eventId\": \"pink-sc-2024\",\r\n//     \"queueIdList\": [\r\n//         \"4faa4933-54cf-11ee-99af-0a2a518633fa\",\r\n//         \"4faa49aa-54cf-11ee-99af-0a2a518633fa\",\r\n//         \"4faa4a81-54cf-11ee-99af-0a2a518633fa\"\r\n//     ],\r\n//     \"showIdList\":[\r\n//         \"2024-02-13\",\r\n//         \"2024-03-02\", // swapped\r\n//         \"2024-02-20\" // swapped\r\n//     ]\r\n// }\r\n\r\n// Case 4: GroupID, eventID pair\r\n// Status: 406 Not Acceptable\r\n// Queue Register Error: RegGroup is unable to select queues\r\n// {\r\n//     \"groupId\": \"36c63a1e-2b5f-47ab-b908-6197a60b3b24\",\r\n//     \"userId\": \"2\",\r\n//     \"eventId\": \"pink-sc-2024\", // wrong event\r\n//     \"queueIdList\": [ // correct queueID, showID pairs\r\n//         \"4faa28be-54cf-11ee-99af-0a2a518633fa\",\r\n//         \"4faa2984-54cf-11ee-99af-0a2a518633fa\",\r\n//         \"4faa2b3e-54cf-11ee-99af-0a2a518633fa\"\r\n//     ],\r\n//     \"showIdList\":[\r\n//         \"2023-11-11\",\r\n//         \"2023-11-17\",\r\n//         \"2023-11-19\" \r\n//     ]\r\n// }\r\n\r\n\r\n// Case 5: Valid case 2\r\n// Status: 200 OK\r\n// Queue Register Error: RegGroup is unable to select queues\r\n// {\r\n//     \"groupId\": \"36c63a1e-2b5f-47ab-b908-6197a60b3b24\",\r\n//     \"userId\": \"2\",\r\n//     \"eventId\": \"tswift-era-2024\", // correct event now\r\n//     \"queueIdList\": [ // correct queueID, showID pairs\r\n//         \"4faa28be-54cf-11ee-99af-0a2a518633fa\",\r\n//         \"4faa2984-54cf-11ee-99af-0a2a518633fa\",\r\n//         \"4faa2b3e-54cf-11ee-99af-0a2a518633fa\"\r\n//     ],\r\n//     \"showIdList\":[\r\n//         \"2023-11-11\",\r\n//         \"2023-11-17\",\r\n//         \"2023-11-19\" \r\n//     ]\r\n// }\r\n\r\n\r\n// Case 6: Resubmission of valid case\r\n// Status: 409 Conflict\r\n// {\r\n//     \"groupId\": \"36c63a1e-2b5f-47ab-b908-6197a60b3b24\",\r\n//     \"userId\": \"2\",\r\n//     \"eventId\": \"tswift-era-2024\", // correct event now\r\n//     \"queueIdList\": [ // correct queueID, showID pairs\r\n//         \"4faa28be-54cf-11ee-99af-0a2a518633fa\",\r\n//         \"4faa2984-54cf-11ee-99af-0a2a518633fa\",\r\n//         \"4faa2b3e-54cf-11ee-99af-0a2a518633fa\"\r\n//     ],\r\n//     \"showIdList\":[\r\n//         \"2023-11-11\",\r\n//         \"2023-11-17\",\r\n//         \"2023-11-19\" \r\n//     ]\r\n// }"
+						},
+						"url": {
+							"raw": "http://localhost:8080/queues/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"queues",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Queues For Event",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjU5ODIzMTUzOSIsImlhdCI6MTY5NzU1OTE5OCwiZXhwIjoxNjk3NTYyNzk4fQ.2lWntqKMw3yiJYQoaqqrKa8FMpnQL-HMIOh8r6YTveU",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/queues/tswift-era-2024",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"queues",
+								"tswift-era-2024"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Purchase-APIs",
+			"item": [
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Auth Login-eg1",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "email",
+								"value": "teo.junrui.jonathanedward@gmail.com",
+								"type": "text"
+							},
+							{
+								"key": "mobile",
+								"value": "06598231538",
+								"type": "text"
+							},
+							{
+								"key": "password",
+								"value": "test123",
+								"type": "text"
+							},
+							{
+								"key": "ipAddress",
+								"value": "172.128.0.6",
+								"type": "text"
+							},
+							{
+								"key": "groupId",
+								"value": "44456173-c864-4058-a62c-b2497ccef4ae",
+								"type": "text"
+							},
+							{
+								"key": "eventId",
+								"value": "enhypen-2023",
+								"type": "text"
+							},
+							{
+								"key": "queueId",
+								"value": "4faa474d-54cf-11ee-99af-0a2a518633fa",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Auth Login-eg1-invalid-queue-ID",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "email",
+								"value": "teo.junrui.jonathanedward@gmail.com",
+								"type": "text"
+							},
+							{
+								"key": "mobile",
+								"value": "06598231538",
+								"type": "text"
+							},
+							{
+								"key": "password",
+								"value": "test123",
+								"type": "text"
+							},
+							{
+								"key": "ipAddress",
+								"value": "172.128.0.6",
+								"type": "text"
+							},
+							{
+								"key": "groupId",
+								"value": "44456173-c864-4058-a62c-b2497ccef4ae",
+								"type": "text"
+							},
+							{
+								"key": "eventId",
+								"value": "enhypen-2023",
+								"type": "text"
+							},
+							{
+								"key": "queueId",
+								"value": "4faa474d-54cf-11ee-99af-0a2a518633fa",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get seat categories",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "P",
+			"item": []
+		},
+		{
+			"name": "validate-group-by-email-and-mobile",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Registration status of users in a group",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "email",
+			"value": "jrteo.2022@smu.edu.sg"
+		},
+		{
+			"key": "email2",
+			"value": "ryan.yap.2022@smu.edu.sg"
+		},
+		{
+			"key": "mobile2",
+			"value": "00000000001"
+		},
+		{
+			"key": "testURL",
+			"value": "13.250.22.158"
+		},
+		{
+			"key": "prodURL",
+			"value": "18.143.73.189"
+		},
+		{
+			"key": "purchase-prodIP",
+			"value": "3.1.102.120"
+		},
+		{
+			"key": "purchase-prodURL",
+			"value": "3.1.102.120"
+		}
+	]
+}
