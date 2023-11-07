@@ -20,11 +20,6 @@
         SELECT user_id, mobile_number, email, authenticator_id, is_verified FROM user WHERE email = #{email} and is_verified = 1
     </select>
 
-    <select id="retrieveUserForAuth" resultType = "java.lang.String" parameterType="map">
-        SELECT password FROM user
-        WHERE email = #{email} and mobile_number = #{mobile}
-    </select>
-
     <resultMap id="userInfoResultMap" type="com.ticketpurchaseapp.purchase.dto.UserInfo">
         <id column="user_id" property="id"/>
         <result column="mobile_number" property="mobile"/>
@@ -42,4 +37,32 @@
         ON u.user_id = c.user_id
         WHERE c.group_id=#{group_id}
     </select>
+
+    <resultMap id="userAuthResultMap" type="com.ticketpurchaseapp.purchase.dto.UserAuth">
+        <result column="password" property="password"/>
+        <result column="allow_login" property="allowLogin"/>
+    </resultMap>
+
+    <select id="retrieveUserForAuth" resultMap="userAuthResultMap" parameterType="map">
+        SELECT password, allow_login FROM user
+        WHERE email = #{email} and mobile_number = #{mobile}
+    </select>
+
+    <insert id="recordLoginFailed" parameterType="map">
+        INSERT INTO login_record (ip_address, datetime_recorded) VALUES (#{ip_address}, #{datetime_recorded})
+    </insert>
+
+    <select id="isLoginLocked" parameterType="map" resultType="boolean">
+        SELECT
+        CASE
+            WHEN COUNT(*) > 3 THEN TRUE
+            ELSE FALSE
+        END
+        FROM login_record
+        WHERE ip_address = #{ip_address} AND datetime_recorded > #{datetime_recorded}
+    </select>
+
+    <delete id="removeExpiredLoginRecords" parameterType="map">
+        DELETE FROM login_record WHERE #{datetime_recorded} > datetime_recorded
+    </delete>
 </mapper>

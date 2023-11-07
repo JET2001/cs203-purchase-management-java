@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ticketpurchaseapp.purchase.repository.SeatRepository">
+
+    <resultMap id="SeatCategoryInfoResultMap" type="com.ticketpurchaseapp.purchase.dto.SeatCategoryInfo">
+        <id column="category_id" property="categoryId"/>
+        <result column="seat_price" property="seatPrice"/>
+        <result column="seats_left" property="seatsLeft"/>
+        <result column="seats_total" property="seatsTotal"/>
+    </resultMap>
+
+    <resultMap id="SeatResultMap" type="com.ticketpurchaseapp.purchase.dto.Seat">
+        <id column="seat_id" property="seatId"/>
+        <result column="location_id" property="locationId"/>
+        <result column="venue_id" property="venueId"/>
+        <result column="row_id" property="rowId"/>
+        <result column="col_id" property="colId"/>
+    </resultMap>
+
+    <select id="getSeatCategoryInfos" resultMap="SeatCategoryInfoResultMap" parameterType="map">
+        SELECT c.category_id, c.price as seat_price, 
+        count(CASE WHEN s.user_id IS NULL THEN 1 ELSE NULL END) AS seats_left,
+        count(s.seat_id) as seats_total
+        FROM seat_category_for_show c
+        INNER JOIN seat_for_show s 
+        ON (c.show_id = s.show_id AND c.event_id = s.event_id AND c.category_id = s.category_id)
+        WHERE c.event_id = #{event_id} and c.show_id = #{show_id}
+        GROUP BY c.category_id, c.price;
+    </select>
+
+    <select id="getSeatsInCategoryForSpecificShow" resultMap="SeatResultMap" parameterType="map">
+        SELECT s.location_id, s.venue_id, s.seat_id, s.row_id, s.col_id
+        FROM seat s
+        INNER JOIN seat_for_show sfs 
+        ON s.location_id = sfs.location_id AND s.venue_id = sfs.venue_id AND s.seat_id = sfs.seat_id 
+        WHERE sfs.event_id = #{event_id} AND sfs.show_id = #{show_id} AND sfs.category_id = #{category_id} AND sfs.user_id is null
+        ORDER BY s.row_id, s.seat_id;
+    </select>
+
+    <update id="saveSeatCategorySelection" parameterType="map">
+        UPDATE seat_for_show
+        SET user_id = #{user_id}
+        WHERE event_id = #{event_id} AND show_id = #{show_id} AND category_id = #{category_id} AND seat_id = #{seat_id};
+    </update>
+
+    <select id="userHasSeatForSpecificShow" parameterType="map" resultType="boolean">
+        SELECT 
+        CASE 
+            WHEN COUNT(*) > 0 THEN TRUE
+            ELSE FALSE
+        END
+        FROM seat_for_show
+        WHERE user_id = #{user_id} AND show_id = #{show_id} AND event_id = #{event_id};
+    </select>
+</mapper>
