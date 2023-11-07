@@ -63,4 +63,8 @@
     <select id="getEventName" parameterType="map" resultType="java.lang.String">
         SELECT event_name FROM event WHERE event_id = #{event_id}
     </select>
+
+    <select id="getGroupSize" parameterType="map" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM confirmation_group_for_event WHERE group_id = #{group_id}
+    </select>
 </mapper>

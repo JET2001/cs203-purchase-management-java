@@ -17,4 +17,5 @@ public interface EventRegisterRepository {
     List<Queue> retrieveAllQueuesForSpecificGroup(@Param("group_id") String groupId);
 
     String getEventName(@Param("event_id") String eventId);
+    Integer getGroupSize(@Param("group_id") String groupId);
 }
