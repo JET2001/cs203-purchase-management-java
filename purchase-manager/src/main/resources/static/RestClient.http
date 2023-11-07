@@ -65,3 +65,19 @@ Content-Type: application/json
 {
   "eventId": "wrong"
 }
+
+###
+GET http://localhost:8080/purchase/group-size
+Content-Type: application/json
+
+{
+  "groupId": "7351af2a-c7a2-4ce7-a44a-73cfbc401ad4"
+}
+
+###
+GET http://localhost:8080/purchase/group-size
+Content-Type: application/json
+
+{
+  "groupId": "wrong"
+}

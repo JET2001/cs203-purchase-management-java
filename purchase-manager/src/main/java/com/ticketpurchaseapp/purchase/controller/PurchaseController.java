@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ticketpurchaseapp.purchase.common.exception.EventRegisterException;
@@ -49,6 +50,20 @@ public class PurchaseController {
     public PurchaseController(SeatService seatService, EventRegisterService eventRegisterService) {
         this.seatService = seatService;
         this.eventRegisterService = eventRegisterService;
+    }
+
+    @GetMapping("/group-size")
+    public ResponseEntity<?> getGroupSize(@RequestBody Map<String, String> body) {
+        try {
+            Integer groupSize = eventRegisterService.getGroupSize(body.get("groupId"));
+            return new ResponseEntity<>(groupSize, HttpStatus.OK);
+        } catch (EventRegisterException e) {
+            return ResponseEntity.status(404).body("Event Registration Error: " + e.getMessage());
+        } catch (InvalidArgsException e) {
+            return ResponseEntity.status(422).body("Invalid Request Error: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Server Error: " + e.getMessage());
+        }
     }
 
     @GetMapping("/event")
