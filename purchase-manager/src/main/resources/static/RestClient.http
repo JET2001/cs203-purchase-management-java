@@ -49,3 +49,11 @@ email: davidapsc@gmail.com
 mobile: 06592396157
 password: test123
 ipAddress: 1
+
+###
+GET http://localhost:8080/purchase/event/tswift-era
+Content-Type: application/json
+
+###
+GET http://localhost:8080/purchase/event/tswift-era-2024
+Content-Type: application/json

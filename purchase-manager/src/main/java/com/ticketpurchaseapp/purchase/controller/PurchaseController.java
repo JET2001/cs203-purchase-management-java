@@ -22,10 +22,12 @@ import com.ticketpurchaseapp.purchase.common.exception.EventRegisterException;
 import com.ticketpurchaseapp.purchase.common.exception.InvalidArgsException;
 import com.ticketpurchaseapp.purchase.common.exception.PurchaseException;
 import com.ticketpurchaseapp.purchase.common.exception.UserException;
+import com.ticketpurchaseapp.purchase.dto.Event;
 import com.ticketpurchaseapp.purchase.dto.SeatCategoryInfo;
 import com.ticketpurchaseapp.purchase.dto.SeatCategorySelection;
 import com.ticketpurchaseapp.purchase.dto.Status;
 import com.ticketpurchaseapp.purchase.dto.User;
+import com.ticketpurchaseapp.purchase.service.EventRegisterService;
 import com.ticketpurchaseapp.purchase.service.SeatService;
 import com.ticketpurchaseapp.purchase.service.UserService;
 import com.ticketpurchaseapp.purchase.util.JwtUtil;
@@ -34,37 +36,51 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
-@CrossOrigin(allowedHeaders = {"Authorization"}, exposedHeaders = {"Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"})
+@CrossOrigin(allowedHeaders = { "Authorization" }, exposedHeaders = { "Access-Control-Allow-Origin",
+        "Access-Control-Allow-Credentials" })
 @RequestMapping("/purchase")
 public class PurchaseController {
 
     private final SeatService seatService;
+    private final EventRegisterService eventRegisterService;
 
     @Autowired
-    public PurchaseController(SeatService seatService) {
+    public PurchaseController(SeatService seatService, EventRegisterService eventRegisterService) {
         this.seatService = seatService;
+        this.eventRegisterService = eventRegisterService;
     }
 
-    @GetMapping("/{eventId}/{showId}/categories")
-    public ResponseEntity<?> getSeatCategoryInfosForSpecificShow(@PathVariable String eventId, @PathVariable String showId) {
+    @GetMapping("/event/{eventId}")
+    public ResponseEntity<?> getEventName(@PathVariable String eventId) {
         try {
-            List<SeatCategoryInfo> seatCategoryInfos = seatService.getSeatCategoryInfos(eventId, showId);
-            return new ResponseEntity<>(seatCategoryInfos, HttpStatus.OK);
-        }
-        catch (EventRegisterException e) {
+            String eventName = eventRegisterService.getEventName(eventId);
+            return new ResponseEntity<>(eventName, HttpStatus.OK);
+        } catch (EventRegisterException e) {
             return ResponseEntity.status(404).body("Event Registration Error: " + e.getMessage());
-        }
-        catch (PurchaseException e) {
-            return ResponseEntity.status(404).body("Purchase Error: " + e.getMessage());
-        }
-        catch (InvalidArgsException e) {
+        } catch (InvalidArgsException e) {
             return ResponseEntity.status(422).body("Invalid Request Error: " + e.getMessage());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(500).body("Server Error: " + e.getMessage());
         }
     }
-    
+
+    @GetMapping("/{eventId}/{showId}/categories")
+    public ResponseEntity<?> getSeatCategoryInfosForSpecificShow(@PathVariable String eventId,
+            @PathVariable String showId) {
+        try {
+            List<SeatCategoryInfo> seatCategoryInfos = seatService.getSeatCategoryInfos(eventId, showId);
+            return new ResponseEntity<>(seatCategoryInfos, HttpStatus.OK);
+        } catch (EventRegisterException e) {
+            return ResponseEntity.status(404).body("Event Registration Error: " + e.getMessage());
+        } catch (PurchaseException e) {
+            return ResponseEntity.status(404).body("Purchase Error: " + e.getMessage());
+        } catch (InvalidArgsException e) {
+            return ResponseEntity.status(422).body("Invalid Request Error: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Server Error: " + e.getMessage());
+        }
+    }
+
     @PostMapping("/seat-category-selection")
     public ResponseEntity<?> saveSeatCategorySelection(@RequestBody SeatCategorySelection form) {
         try {
