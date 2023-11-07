@@ -56,7 +56,7 @@
     </select>
 
     <insert id="recordLoginFailed" parameterType="map">
-        INSERT INTO login_record (ip_address, datetime_recorded) VALUES (#{ip_address}, #{datetime_recorded})
+        INSERT INTO login_record (ip_address, datetime_recorded, success) VALUES (#{ip_address}, #{datetime_recorded}, 0)
     </insert>
 
     <select id="isLoginLocked" parameterType="map" resultType="boolean">
@@ -70,12 +70,12 @@
     </select>
 
     <delete id="removeExpiredLoginRecords" parameterType="map">
-        DELETE FROM login_record WHERE #{datetime_recorded} > datetime_recorded
+        DELETE FROM login_record WHERE #{datetime_recorded} > datetime_recorded AND success = 0
     </delete>
 
     <!-- hasGroupRegisteredQueues --> 
 
-    <select id="hasGroupRegisteredForThisQueue" parameterType = "map">
+    <select id="hasGroupRegisteredForThisQueue" parameterType="map" resultType="boolean">
         SELECT
         CASE
             WHEN COUNT(*) > 0 THEN TRUE
@@ -87,7 +87,7 @@
 
     <!-- isUserInGroup --> 
 
-    <select id="isUserInGroup" parameterType = "map">
+    <select id="isUserInGroup" parameterType = "map" resultType = "boolean">
         SELECT
         CASE
             WHEN COUNT(*) > 0 THEN TRUE
@@ -99,23 +99,29 @@
 
     <!-- isQueueStillOnGoing --> 
 
-    <select id="isQueueStillOnGoing" parameterType = "map">
+    <select id="isQueueStillOnGoing" parameterType = "map" resultType = "boolean">
         SELECT 
         CASE
             WHEN COUNT(*) > 0 THEN TRUE
             ELSE FALSE
         END
         FROM queue
-        WHERE queue_id = #{queue_id} AND
-        AND (SELECT queue_end_datetime FROM queue WHERE queue_id = #{queue_id} LIMIT 1) > DATE_ADD(NOW(), INTERVAL 8 HOUR)
+        WHERE queue_id = #{queue_id}
+        AND queue_end_datetime > DATE_ADD(NOW(), INTERVAL 8 HOUR)
     </select>
 
-    <!-- getQueuesForUser --> 
+    <!-- recordLoginSuccess --> 
 
-    <select id="getQueuesForUser">
-    SELECT queue_id, queue_start_datetime, queue_end_datetime 
-    FROM queue
-    WHERE queue_id = #{queue_id}
-    </select>   
-    
-     </mapper>
+    <select id="recordLoginSuccess" parameterType = "map">
+        INSERT INTO login_record (ip_address, datetime_recorded, group_id, user_id, success) VALUES (#{ip_address}, #{datetime_recorded}, #{group_id}, #{user_id}, 1)
+    </select>
+
+    <!-- isAnyGroupMemberSuccessful --> 
+
+    <select id="getQueueingGroupMember" parameterType = "map" resultType = "java.lang.String">
+        SELECT user_id
+        FROM login_record
+        WHERE group_id = #{group_id} 
+        AND success = 1
+    </select>  
+</mapper>
