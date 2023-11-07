@@ -12,5 +12,5 @@ public interface EventRegisterService {
     public RegistrationInfo getRegistrationGroupInfo(String userId, String eventId);
     public Boolean isValidShowForEvent(String eventId, String showId);
     public List<Show> getAllShowsForSpecificEvent(String eventId);
-
+    public String getEventName(String eventId);
 }

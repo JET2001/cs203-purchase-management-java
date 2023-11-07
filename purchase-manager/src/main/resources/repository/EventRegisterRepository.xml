@@ -59,4 +59,8 @@
         INNER JOIN registration_group_for_queue r ON q.queue_id = r.queue_id
         WHERE r.group_id =#{group_id}
     </select>
+
+    <select id="getEventName" parameterType="map" resultType="java.lang.String">
+        SELECT event_name FROM event WHERE event_id = #{event_id}
+    </select>
 </mapper>
