@@ -51,9 +51,17 @@ password: test123
 ipAddress: 1
 
 ###
-GET http://localhost:8080/purchase/event/tswift-era
+GET http://localhost:8080/purchase/event
 Content-Type: application/json
 
+{
+  "eventId": "tswift-era-2024"
+}
+
 ###
-GET http://localhost:8080/purchase/event/tswift-era-2024
+GET http://localhost:8080/purchase/event
 Content-Type: application/json
+
+{
+  "eventId": "wrong"
+}

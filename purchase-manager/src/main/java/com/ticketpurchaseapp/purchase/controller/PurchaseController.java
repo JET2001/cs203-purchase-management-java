@@ -3,6 +3,7 @@ package com.ticketpurchaseapp.purchase.controller;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,10 +51,10 @@ public class PurchaseController {
         this.eventRegisterService = eventRegisterService;
     }
 
-    @GetMapping("/event/{eventId}")
-    public ResponseEntity<?> getEventName(@PathVariable String eventId) {
+    @GetMapping("/event")
+    public ResponseEntity<?> getEventName(@RequestBody Map<String, String> body) {
         try {
-            String eventName = eventRegisterService.getEventName(eventId);
+            String eventName = eventRegisterService.getEventName(body.get("eventId"));
             return new ResponseEntity<>(eventName, HttpStatus.OK);
         } catch (EventRegisterException e) {
             return ResponseEntity.status(404).body("Event Registration Error: " + e.getMessage());
