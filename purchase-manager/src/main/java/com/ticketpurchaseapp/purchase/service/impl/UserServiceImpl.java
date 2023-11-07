@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean authenticateUser(String email, String mobile, String password, String groupId, String eventId,
+    public boolean authenticateUser(String email, String mobile, String password, String ipAddress, String groupId, String eventId, 
             String queueId) {
         Utility utility = new Utility();
         if (!utility.emailWhitelist(email) || !utility.isInputSafe(mobile) || password == null) {
@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService {
 
         UserAuth userAuth = userRepository.retrieveUserForAuth(email, mobile);
 
-        if (utility.checkPassword(password, userAuth.getPassword())) {
+        if (!utility.checkPassword(password, userAuth.getPassword())) {
             throw new UserException("Email or password is incorrect");
         }
         if (!userAuth.isAllowLogin()) {
@@ -96,24 +96,30 @@ public class UserServiceImpl implements UserService {
         }
 
         // Check if user is indeed part of this group
+        System.out.println("userAuth.id = " + userAuth.getUserId() +" " + groupId);
         if (!userRepository.isUserInGroup(userAuth.getUserId(), groupId)) {
             throw new UserException("Invalid user");
         }
 
         // Check if user's group has registered for this queue.
-        if (!userRepository.hasGroupRegisteredForThisQueue(groupId, queueId)) {
+        if (!userRepository.hasGroupRegisteredForThisQueue(groupId, queueId, eventId)) {
             throw new UserException("Invalid user group for event");
         }
-
         // Check if the queue has already closed
         if (!userRepository.isQueueStillOnGoing(queueId)){
             throw new UserException("The queue you have registered for has closed");
         }
+        // Check if there is already one member logged in to the purchase app, if so, we should deny all other entry
+        String queueingGroupMemberID = userRepository.getQueueingGroupMember(groupId);
 
-        // Check if there is already one member logged in
+        boolean isUserQueueing = userAuth.getUserId().equals(queueingGroupMemberID);
         
+        if (queueingGroupMemberID != null && !isUserQueueing){
+            throw new UserException("Another group member is queueing on your behalf");
+        }
 
-        // If all these checks pass, then the user can login
+        // If all these checks pass, log the successful login and allow log in.
+        userRepository.recordLoginSuccess(ipAddress, groupId, userAuth.getUserId(), LocalDateTime.now());
         return true;
     }
 
