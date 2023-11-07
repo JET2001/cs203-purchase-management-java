@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.ticketpurchaseapp.purchase.dto.Queue;
 import com.ticketpurchaseapp.purchase.dto.User;
 import com.ticketpurchaseapp.purchase.dto.UserAuth;
 import com.ticketpurchaseapp.purchase.dto.UserInfo;
@@ -23,7 +24,20 @@ public interface UserRepository {
 
     int recordLoginFailed(@Param("ip_address") String ipAddress, @Param("datetime_recorded") LocalDateTime datetime_recorded);
 
+    void recordLoginSuccess(@Param("ip_address") String ipAddress,  @Param("group_id") String groupId,
+    @Param("user_id") String userId, 
+    @Param("datetime_recorded") LocalDateTime datetime_recorded);
+
     boolean isLoginLocked(@Param("ip_address") String ipAddress, @Param("datetime_recorded") LocalDateTime datetime_recorded);
 
     int removeExpiredLoginRecords(@Param("datetime_recorded") LocalDateTime datetime_recorded);
+
+    boolean hasGroupRegisteredForThisQueue(@Param("group_id") String groupId, @Param("queue_id") String queueId, @Param("event_id") String eventId);
+
+    boolean isUserInGroup(@Param("user_id") String userId, @Param("group_id") String groupId);
+    
+    boolean isQueueStillOnGoing(@Param("queue_id") String queueId);
+
+    String getQueueingGroupMember(@Param("group_id") String groupId);
+
 }
