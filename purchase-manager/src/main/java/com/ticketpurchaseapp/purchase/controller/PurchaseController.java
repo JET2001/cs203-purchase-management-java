@@ -1,6 +1,7 @@
 package com.ticketpurchaseapp.purchase.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -70,7 +71,9 @@ public class PurchaseController {
     public ResponseEntity<?> getEventName(@PathVariable String eventId) {
         try {
             String eventName = eventRegisterService.getEventName(eventId);
-            return ResponseEntity.ok().body(eventName);
+            Map<String, String> event = new HashMap<>();
+            event.put("eventTitle", eventName);
+            return ResponseEntity.ok().body(event);
         } catch (EventRegisterException e) {
             return ResponseEntity.status(404).body("Event Registration Error: " + e.getMessage());
         } catch (InvalidArgsException e) {
