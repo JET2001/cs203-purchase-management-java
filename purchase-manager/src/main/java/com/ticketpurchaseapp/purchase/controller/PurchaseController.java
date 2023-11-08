@@ -39,7 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @Slf4j
 @CrossOrigin(allowedHeaders = { "Authorization", "Content-Type" }, exposedHeaders = { "Access-Control-Allow-Origin",
-        "Access-Control-Allow-Credentials" })
+        "Access-Control-Allow-Credentials", "Access-Control-Allow-Headers" })
 @RequestMapping("/purchase")
 public class PurchaseController {
 
@@ -52,10 +52,10 @@ public class PurchaseController {
         this.eventRegisterService = eventRegisterService;
     }
 
-    @GetMapping("/group-size")
-    public ResponseEntity<?> getGroupSize(@RequestBody Map<String, String> body) {
+    @GetMapping("/group-size/{groupId}")
+    public ResponseEntity<?> getGroupSize(@PathVariable String groupId) {
         try {
-            Integer groupSize = eventRegisterService.getGroupSize(body.get("groupId"));
+            Integer groupSize = eventRegisterService.getGroupSize(groupId);
             return new ResponseEntity<>(groupSize, HttpStatus.OK);
         } catch (EventRegisterException e) {
             return ResponseEntity.status(404).body("Event Registration Error: " + e.getMessage());
@@ -66,11 +66,11 @@ public class PurchaseController {
         }
     }
 
-    @GetMapping("/event")
-    public ResponseEntity<?> getEventName(@RequestBody Map<String, String> body) {
+    @GetMapping("/event/{eventId}")
+    public ResponseEntity<?> getEventName(@PathVariable String eventId) {
         try {
-            String eventName = eventRegisterService.getEventName(body.get("eventId"));
-            return new ResponseEntity<>(eventName, HttpStatus.OK);
+            String eventName = eventRegisterService.getEventName(eventId);
+            return ResponseEntity.ok().body(eventName);
         } catch (EventRegisterException e) {
             return ResponseEntity.status(404).body("Event Registration Error: " + e.getMessage());
         } catch (InvalidArgsException e) {
