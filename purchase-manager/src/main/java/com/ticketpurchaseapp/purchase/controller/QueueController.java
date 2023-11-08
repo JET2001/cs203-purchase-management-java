@@ -6,6 +6,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,11 +37,11 @@ public class QueueController {
         this.queueService = queueService;
     }
     
-    @PostMapping("/queue-number")
-    public ResponseEntity<?> getQueueNumber(@RequestBody HashMap<String, String> queueData){
+    @GetMapping("/queue-number/{email}/{eventId}/{queueId}")
+    public ResponseEntity<?> getQueueNumber(@PathVariable String email, @PathVariable String eventId, @PathVariable String queueId){
         try {
             Map<String, Integer> queueNumberMap = new HashMap<>();
-            Integer queueNumber = queueService.getQueueNumber(queueData.get("email"), queueData.get("eventId"), queueData.get("queueId"));
+            Integer queueNumber = queueService.getQueueNumber(email, eventId, queueId);
             queueNumberMap.put("queueNumber", queueNumber);
             return ResponseEntity.ok().body(queueNumberMap);
         } catch (InvalidArgsException e){
