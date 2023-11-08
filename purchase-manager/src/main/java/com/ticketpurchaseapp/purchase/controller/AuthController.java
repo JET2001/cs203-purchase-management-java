@@ -18,8 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
-@CrossOrigin(allowedHeaders = { "Authorization", "Content-Type" }, exposedHeaders = { "Access-Control-Allow-Origin",
-        "Access-Control-Allow-Credentials", "Access-Control-Allow-Headers" })
+@CrossOrigin(allowedHeaders = { "Authorization", "Content-Type", "email", "mobile", "password", "ipAddress",
+        "groupId", "eventId", "queueId" }, exposedHeaders = { "Access-Control-Allow-Origin",
+                "Access-Control-Allow-Credentials", "Access-Control-Allow-Headers" })
 @RequestMapping("/auth")
 public class AuthController {
 
@@ -45,13 +46,14 @@ public class AuthController {
             }
             userService.recordLoginFailed(ipAddress);
 
-            return ResponseEntity.internalServerError().body("Internal server error at login: Please contact us regarding this issue.");
+            return ResponseEntity.internalServerError()
+                    .body("Internal server error at login: Please contact us regarding this issue.");
         } catch (InvalidArgsException e) {
             log.error("Verify multiple error: ", e);
             userService.recordLoginFailed(ipAddress);
             return ResponseEntity.unprocessableEntity().body(e.getMessage());
-            
-        } catch (UserException e){
+
+        } catch (UserException e) {
             log.error(e.getMessage());
             userService.recordLoginFailed(ipAddress);
             return ResponseEntity.status(403).body(e.getMessage());

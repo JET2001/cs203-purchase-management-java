@@ -25,7 +25,8 @@ public class WebConfigure implements WebMvcConfigurer {
                 .addPathPatterns("/users/**")
                 .addPathPatterns("/events-register/**")
                 .addPathPatterns("/purchase/seat-category-selection")
-                .excludePathPatterns("/purchase/**");
+                .excludePathPatterns("/purchase/**")
+                .excludePathPatterns("/auth/login");
     }
 
     @Override
