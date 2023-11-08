@@ -81,3 +81,21 @@ Content-Type: application/json
 {
   "groupId": "wrong"
 }
+
+###
+POST http://localhost:8081/queues/queue-number
+Content-Type: application/json
+
+{
+  "email": "teo.junrui.jonathanedward@gmail.com",
+  "eventId": "cplay-mots-2024",
+  "queueId": "4faa3cb7-54cf-11ee-99af-0a2a518633fa"
+}
+
+###
+POST http://localhost:8081/queues/queue-factor
+Content-Type: application/json
+
+{
+  "queueId": "4faa3cb7-54cf-11ee-99af-0a2a518633fa"
+}
