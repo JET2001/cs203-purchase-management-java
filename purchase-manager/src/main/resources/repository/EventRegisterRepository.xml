@@ -15,6 +15,12 @@
         WHERE user_id=#{user_id} AND event_id=#{event_id}
     </select>
 
+    <select id="getRegistrationGroupLeader" parameterType="map" resultType="String">
+        SELECT group_leader
+        FROM registration_group_for_event
+        WHERE group_id=#{group_id}
+    </select>
+
     <select id="isGroupLeader" parameterType="map" resultType="boolean">
         SELECT 
         CASE 
@@ -67,4 +73,22 @@
     <select id="getGroupSize" parameterType="map" resultType="java.lang.Integer">
         SELECT COUNT(*) FROM confirmation_group_for_event WHERE group_id = #{group_id}
     </select>
+
+    <select id="getQueueNumber" parameterType = "map" resultType = "java.lang.Integer">
+        SELECT queue_number FROM registration_group_for_queue
+        WHERE group_id = #{group_id}
+        AND queue_id = #{queue_id}
+    </select>
+
+    <select id="getQueueFactor" parameterType = "map" resultType = "java.lang.Integer">
+        SELECT factor from virtual_queue_factor
+        WHERE queue_id=#{queue_id}
+    </select>
+
+    <update id="updateQueueFactor" parameterType = "map">
+        UPDATE virtual_queue_factor
+        SET factor = factor + 1
+        WHERE queue_id = #{queue_id};
+    </update>
+
 </mapper>

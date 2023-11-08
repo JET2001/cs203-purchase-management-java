@@ -36,6 +36,7 @@ public class SeatServiceImpl implements SeatService {
     private final EventRegisterRepository eventRegisterRepository;
     private final EventRegisterServiceImpl eventRegisterService;
 
+    @Autowired
     public SeatServiceImpl(SeatRepository seatRepository, EventRegisterRepository eventRegisterRepository,
             EventRegisterServiceImpl eventRegisterService) {
         this.seatRepository = seatRepository;

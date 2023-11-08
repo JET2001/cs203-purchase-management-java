@@ -33,6 +33,7 @@ public class EventRegisterServiceImpl implements EventRegisterService {
     private final EventRegisterRepository eventRegisterRepository;
     private final UserRepository userRepository;
 
+    @Autowired
     public EventRegisterServiceImpl(EventRegisterRepository eventRegisterRepository, UserRepository userRepository) {
         this.eventRegisterRepository = eventRegisterRepository;
         this.userRepository = userRepository;
