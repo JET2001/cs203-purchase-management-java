@@ -15,7 +15,7 @@ public class WebConfigure implements WebMvcConfigurer {
     private final JwtInterceptor jwtInterceptor;
 
     @Autowired
-    WebConfigure(JwtInterceptor jwtInterceptor) {
+    WebConfigure(JwtInterceptor jwtInterceptor){
         this.jwtInterceptor = jwtInterceptor;
     }
 
