@@ -18,7 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
-@CrossOrigin
+@CrossOrigin(allowedHeaders = { "Authorization", "Content-Type" }, exposedHeaders = { "Access-Control-Allow-Origin",
+        "Access-Control-Allow-Credentials", "Access-Control-Allow-Headers" })
 @RequestMapping("/auth")
 public class AuthController {
 
