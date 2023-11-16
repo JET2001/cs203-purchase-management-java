@@ -37,7 +37,33 @@ public class EventRegisterServiceImpl implements EventRegisterService {
         this.eventRegisterRepository = eventRegisterRepository;
         this.userRepository = userRepository;
     }
-    
+
+    @Override
+    public Integer getGroupSize(String groupId) {
+        Utility utility = new Utility();
+        if (!utility.isInputSafe(groupId)) {
+            throw new InvalidArgsException("Invalid Request");
+        }
+        Integer groupSize = eventRegisterRepository.getGroupSize(groupId);
+        if (groupSize == 0) {
+            throw new EventRegisterException("Invalid Group ID");
+        }
+        return groupSize;
+    }
+
+    @Override
+    public String getEventName(String eventId) {
+        Utility utility = new Utility();
+        if (!utility.isInputSafe(eventId)) {
+            throw new InvalidArgsException("Invalid Request");
+        }
+        String eventName = eventRegisterRepository.getEventName(eventId);
+        if (eventName == null) {
+            throw new EventRegisterException("Invalid Event ID");
+        }
+        return eventName;
+    }
+
     @Override
     public Boolean checkGroupRegistrationStatus(String groupId, String eventId) {
         Utility utility = new Utility();

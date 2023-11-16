@@ -3,7 +3,7 @@ GET http://localhost:8080/purchase/tswift-era-2024/2024-03-02/categories
 Content-Type: application/json
 
 ###
-GET http://localhost:8080/purchase/tswift-era-2024/a/categories
+GET http://localhost:8080/purchase/cplay-mots-2024/2024-01-20/categories
 Content-Type: application/json
 
 ###
@@ -32,4 +32,52 @@ Content-Type: application/json
   "showId": "2024-03-02",
   "userId": "1",
   "categoryId": 1
+}
+
+###
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+email: ryanyapjw@gmail.com,
+mobile: 97873327,
+password: password
+ipAddress: 1
+
+###
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+email: davidapsc@gmail.com
+mobile: 06592396157
+password: test123
+ipAddress: 1
+
+###
+GET http://localhost:8080/purchase/event
+Content-Type: application/json
+
+{
+  "eventId": "tswift-era-2024"
+}
+
+###
+GET http://localhost:8080/purchase/event
+Content-Type: application/json
+
+{
+  "eventId": "wrong"
+}
+
+###
+GET http://localhost:8080/purchase/group-size
+Content-Type: application/json
+
+{
+  "groupId": "7351af2a-c7a2-4ce7-a44a-73cfbc401ad4"
+}
+
+###
+GET http://localhost:8080/purchase/group-size
+Content-Type: application/json
+
+{
+  "groupId": "wrong"
 }
