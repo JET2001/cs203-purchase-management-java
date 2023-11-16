@@ -9,6 +9,10 @@ public class SeatAlgorithm {
 
     // assume that seatList is sorted by row_id, then seat_id
     public List<Seat> getSeatAllocation(List<Seat> seatList, int groupSize) {
+        if (seatList.size() == 0) {
+            return null;
+        }
+        
         List<Seat> result = new ArrayList<>();
         List<Seat> row = new ArrayList<>();
         int currRow = seatList.get(0).getRowId();
