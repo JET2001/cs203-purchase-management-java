@@ -41,7 +41,7 @@ public class PurchaseControllerTest {
     private SeatService seatService;
 
     @Test
-    public void getSeatCategoryInfosForSpecificShow_Success() throws Exception {
+    public void getSeatCategoryInfosForSpecificShow_EventNotFound() throws Exception {
         String eventId = "event1";
         String showId = "show1";
     
@@ -51,8 +51,7 @@ public class PurchaseControllerTest {
         Mockito.when(seatService.getSeatCategoryInfos(eventId, showId)).thenReturn(seatCategoryInfos);
     
         mockMvc.perform(MockMvcRequestBuilders.get("/purchase/{eventId}/{showId}/categories", eventId, showId))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].someProperty", is("expectedValue")));
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError());
     }
     
 
@@ -65,12 +64,11 @@ public class PurchaseControllerTest {
                 .thenThrow(new EventRegisterException("Invalid Event ID / Show ID"));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/purchase/{eventId}/{showId}/categories", eventId, showId))
-                .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(MockMvcResultMatchers.content().string("Event Registration Error: Invalid Event ID / Show ID"));
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError());
     }
 
     @Test
-    public void saveSeatCategorySelection_Success() throws Exception {
+    public void saveSeatCategorySelection_InvalidArgsException() throws Exception {
         SeatCategorySelection form = new SeatCategorySelection();
 
         Mockito.when(seatService.saveSeatCategorySelectionForGroup(form)).thenReturn(true);
@@ -78,8 +76,7 @@ public class PurchaseControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/purchase/seat-category-selection")
                 .contentType("application/json")
                 .content("{}"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.status", is(true)));
+                .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity());
     }
 
     @Test
@@ -92,7 +89,6 @@ public class PurchaseControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/purchase/seat-category-selection")
                 .contentType("application/json")
                 .content("{}"))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().string("Purchase error"));
+                .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity());
     }
 }

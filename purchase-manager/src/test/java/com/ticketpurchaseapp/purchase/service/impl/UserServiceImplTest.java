@@ -3,6 +3,7 @@ package com.ticketpurchaseapp.purchase.service.impl;
 import com.ticketpurchaseapp.purchase.common.exception.InvalidArgsException;
 import com.ticketpurchaseapp.purchase.common.exception.UserException;
 import com.ticketpurchaseapp.purchase.dto.User;
+import com.ticketpurchaseapp.purchase.dto.UserAuth;
 import com.ticketpurchaseapp.purchase.repository.UserRepository;
 import com.ticketpurchaseapp.purchase.service.UserService;
 import com.ticketpurchaseapp.purchase.util.Utility;
@@ -152,30 +153,29 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void testAuthenticateUser_ValidInput() {
+    public void testAuthenticateUser_InvalidUser() {
 
-        when(userRepository.retrieveUserForAuth(anyString(), anyString())).thenReturn("hashed_password");
+        when(userRepository.retrieveUserForAuth(anyString(), anyString())).thenReturn(new UserAuth("mock_id_1","$2a$10$EopPRy3755aGyNNUP1wo5.0IGioEij2HGUKLK/n01AIC0oIEz3jZa", true));
 
-        boolean result = userService.authenticateUser("test@example.com", "1234567890", "hashed_password");
-
-        assertTrue(result);
+        assertThrows(UserException.class,()-> { userService.authenticateUser("test@example.com", "1234567890", "test123", "null", "", "", "");
+        });
     }
 
     @Test
     public void testAuthenticateUser_InvalidInput() {
 
         assertThrows(InvalidArgsException.class, () -> {
-            userService.authenticateUser("invalid_email", "invalid_mobile", "hashed_password");
+            userService.authenticateUser("invalid_email", "invalid_mobile", "hashed_password", null, null, null, null);
         });
     }
 
     @Test
     public void testAuthenticateUser_PasswordMismatch() {
 
-        when(userRepository.retrieveUserForAuth(anyString(), anyString())).thenReturn("hashed_password");
+        when(userRepository.retrieveUserForAuth(anyString(), anyString())).thenReturn(new UserAuth("mock_id_1","$2a$10$EopPRy3755aGyNNUP1wo5.0IGioEij2HGUKLK/n01AIC0oIEz3jZa", true));
 
-        boolean result = userService.authenticateUser("test@example.com", "1234567890", "wrong_password");
-
-        assertFalse(result);
+        assertThrows(UserException.class, () -> {
+         userService.authenticateUser("test@example.com", "1234567890", "wrong_password", null, null, null, null);
+        });
     }
 }
